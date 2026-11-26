@@ -1,111 +1,194 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource-variable/geist-mono';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+/*
+  Tokens. Las superficies son neutras con un tinte frío muy leve (rampa "ink"),
+  el color vive en el acento cobalto y en las zonas del mapa.
+  Base de diseño: unslop de Damir Sokolovsky (@heydamir), CC BY 4.0.
+*/
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  color-scheme: light;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --raised: #eceff4;
+  --fg: #111827;
+  --fg-2: #4b5565;
+  --fg-3: #6b7487;
+  --line: rgb(17 24 39 / 0.08);
+  --line-strong: rgb(17 24 39 / 0.16);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --accent: #2853c6;
+  --accent-hover: #2148b0;
+  --accent-ink: #2853c6;
+  --accent-soft: rgb(40 83 198 / 0.08);
+  --on-accent: #ffffff;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  /* Perdido y encontrado: la pareja de colores con significado */
+  --lost: #d9534f;
+  --lost-ink: #b23b37;
+  --found: #2853c6;
+  --found-ink: #2853c6;
+
+  --positive: #16a34a;
+  --negative: #dc2626;
+
+  --elev-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --elev-float: 0 8px 24px rgb(0 0 0 / 0.08);
+  --button-highlight: inset 0 1px 0 rgb(255 255 255 / 0.12);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0b0d14;
+  --surface: #11141c;
+  --raised: #1a1e28;
+  --fg: #eef0f5;
+  --fg-2: #a3a9b8;
+  --fg-3: #7a8296;
+  --line: rgb(238 240 245 / 0.08);
+  --line-strong: rgb(238 240 245 / 0.16);
+
+  --accent: #3560d4;
+  --accent-hover: #4169dc;
+  --accent-ink: #8fa8f5;
+  --accent-soft: rgb(143 168 245 / 0.1);
+  --on-accent: #ffffff;
+
+  --lost: #f07a72;
+  --lost-ink: #f39a93;
+  --found: #7c9bf0;
+  --found-ink: #8fa8f5;
+
+  --positive: #4cc38a;
+  --negative: #e5484d;
+
+  --elev-sm: none;
+  --elev-float: 0 8px 24px rgb(0 0 0 / 0.4);
+}
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-lost: var(--lost);
+  --color-lost-ink: var(--lost-ink);
+  --color-found: var(--found);
+  --color-found-ink: var(--found-ink);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+
+  --shadow-sm: var(--elev-sm);
+  --shadow-float: var(--elev-float);
+
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  input[type='datetime-local']::-webkit-calendar-picker-indicator {
+    opacity: 0.6;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  .select-chevron {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%237a8296' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 12px center;
   }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+/* Una sola entrada al cargar: la columna principal sube unos píxeles */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+.rise-in {
+  animation: rise-in 360ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-in {
+    animation: none;
   }
 }
-p {
-  margin: 0;
+
+/* Controles de MapLibre en la paleta de la interfaz */
+.maplibregl-ctrl-group {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px !important;
+  box-shadow: var(--elev-sm) !important;
+  overflow: hidden;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+.maplibregl-ctrl-group button + button {
+  border-top-color: var(--line) !important;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+[data-theme='dark'] .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(1) brightness(0.85);
+}
+
+.maplibregl-ctrl-attrib {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+  color: var(--fg-3);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: var(--fg-2) !important;
+}
+
+[data-theme='dark'] .maplibregl-ctrl-attrib-button {
+  filter: invert(1);
 }

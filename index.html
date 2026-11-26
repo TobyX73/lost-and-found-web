@@ -1,10 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>lost-and-found-web</title>
+    <meta name="description" content="Publicá lo que perdiste o encontraste y verificá quién es el dueño antes de devolverlo" />
+    <title>Lost & Found</title>
+    <script>
+      // Aplica el tema antes del primer pintado para evitar el parpadeo.
+      ;(function () {
+        var pref = localStorage.getItem('lf.theme')
+        var dark = pref ? pref === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
